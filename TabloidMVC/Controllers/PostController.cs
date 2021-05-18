@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
+using System.Collections.Generic;
 using System.Security.Claims;
+using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 
@@ -24,6 +26,21 @@ namespace TabloidMVC.Controllers
         {
             var posts = _postRepository.GetAllPublishedPosts();
             return View(posts);
+        }
+
+        //displays view that list all the posts created by a specific user
+        public IActionResult MyPost()
+        {
+            int userId = GetCurrentUserProfileId();
+
+            List<Post> myposts = _postRepository.GetAllUserPostById(userId);
+
+            if (myposts == null)
+            {
+                return NotFound();
+            }
+
+            return View(myposts);
         }
 
         public IActionResult Details(int id)
