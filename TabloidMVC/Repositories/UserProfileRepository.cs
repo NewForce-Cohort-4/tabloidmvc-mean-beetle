@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using TabloidMVC.Models;
 using TabloidMVC.Utils;
@@ -55,6 +56,46 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        public UserProfile GetUserProfileById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT Id, FirstName, LastName, DisplayName, UserTypeId 
+                        FROM UserProfile
+                        WHERE Id = @id
+                    ";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        UserProfile userProfile = new UserProfile
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                            DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
+                            UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId"))
+                        };
+
+                        reader.Close();
+                        return userProfile;
+                    }
+                    else
+                    {
+                        reader.Close();
+                        return (null);
+                    }
+                }
+            }
+        }
+
         public List<UserProfile> GetAllUserProfiles()
         {
             using(var conn = Connection)
@@ -63,7 +104,7 @@ namespace TabloidMVC.Repositories
                 using(var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            SELECT FirstName, LastName, DisplayName, UserTypeId
+                            SELECT Id, FirstName, LastName, DisplayName, UserTypeId
                             FROM UserProfile
                             ORDER BY DisplayName ASC";
 

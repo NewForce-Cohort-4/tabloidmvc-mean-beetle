@@ -3,16 +3,37 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using TabloidMVC.Models;
+using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
 {
     public class UserProfileController : Controller
     {
+        private readonly IUserProfileRepository _userprofileRepository;
+
+        public UserProfileController(IUserProfileRepository userProfileRepository)
+        {
+            _userprofileRepository = userProfileRepository;
+        }
+
         // GET: UserProfileController
         public ActionResult Index()
         {
-            return View();
+            int userId = GetCurrentUserProfileId();
+            UserProfile userProfile = _userprofileRepository.GetUserProfileById(userId);
+
+            List<UserProfile> userProfiles = _userprofileRepository.GetAllUserProfiles();
+
+            if (userProfile.UserTypeId == 1)
+            {
+                return View(userProfiles);
+            }
+            
+            
+            return NotFound();
         }
 
         // GET: UserProfileController/Details/5
@@ -82,6 +103,12 @@ namespace TabloidMVC.Controllers
             {
                 return View();
             }
+        }
+
+        private int GetCurrentUserProfileId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }
