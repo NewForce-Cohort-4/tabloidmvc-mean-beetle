@@ -6,7 +6,7 @@ using TabloidMVC.Models;
 
 namespace TabloidMVC.Repositories
 {
-    interface ICommentRepository
+    public interface ICommentRepository
     {
         public List<Comment> GetCommentsByPostId(int postId);
     }
