@@ -113,5 +113,30 @@ namespace TabloidMVC.Controllers
                 return View(tag);
             }
         }
+        public ActionResult ViewTagsToAdd()
+        {
+            List<Tag> tags = _tagRepository.GetAllTags();
+            PostTag pt = new()
+            {
+                Tags = tags,
+                TagIds = new List<int>()
+            };
+            return View(pt);
+        }
+        [HttpPost]
+        public ActionResult ViewTagsToAdd(int id, List<int> tagIds)
+        {
+            try
+            {
+                
+                    _tagRepository.AddTagToPost(id, tagIds);
+                return RedirectToAction("Details","Post", new { id = id });
+            }
+            catch
+            {
+                return RedirectToAction("ViewTagsToAdd", new { id = id });
+            }
+
+        }
     }
 }
