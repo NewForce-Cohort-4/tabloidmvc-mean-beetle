@@ -17,11 +17,12 @@ namespace TabloidMVC.Controllers
         private readonly IPostRepository _postRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly ICommentRepository _commentRepository;
-
-        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, ICommentRepository commentRepository)
+        private readonly ITagRepository _tagRepository;
+        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, ITagRepository tagRepository, ICommentRepository commentRepository)
         {
             _postRepository = postRepository;
             _categoryRepository = categoryRepository;
+            _tagRepository = tagRepository;
             _commentRepository = commentRepository;
         }
 
@@ -46,20 +47,27 @@ namespace TabloidMVC.Controllers
             return View(myposts);
         }
 
+        //Passes post detail view model to view consisting of Post and Tags 
         public IActionResult Details(int id)
         {
-            Post post = _postRepository.GetPublishedPostById(id);
-
+            var post = _postRepository.GetPublishedPostById(id);
+            var tags = _tagRepository.GetTagsByPostId(id);
             if (post == null)
             {
                 int userId = GetCurrentUserProfileId();
                 post = _postRepository.GetUserPostById(id, userId);
+                tags = _tagRepository.GetTagsByPostId(post.Id);
                 if (post == null)
                 {
                     return NotFound();
                 }
             }
-            return View(post);
+            PostDetailViewModel pd = new()
+            {
+                Post = post,
+                Tags = tags
+            };
+            return View(pd);
         }
 
         public IActionResult Create()
