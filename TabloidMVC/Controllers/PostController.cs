@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using TabloidMVC.Models;
@@ -27,6 +28,21 @@ namespace TabloidMVC.Controllers
         {
             var posts = _postRepository.GetAllPublishedPosts();
             return View(posts);
+        }
+
+        //displays view that list all the posts created by a specific user
+        public IActionResult MyPost()
+        {
+            int userId = GetCurrentUserProfileId();
+
+            List<Post> myposts = _postRepository.GetAllUserPostById(userId);
+
+            if (myposts == null)
+            {
+                return NotFound();
+            }
+
+            return View(myposts);
         }
 
         public IActionResult Details(int id)
@@ -77,7 +93,67 @@ namespace TabloidMVC.Controllers
                 return View(vm);
             }
         }
-        
+
+        // GET: PostController/Edit/postId
+        public ActionResult Edit(int id)
+        {
+            int userProfileId = GetCurrentUserProfileId();
+            Post post = _postRepository.GetUserPostById(id, userProfileId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            return View(post);
+
+        }
+
+        // POST: PostController/Edit/postId
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, Post post)
+        {
+            try
+            {
+                _postRepository.UpdatePost(post);
+
+                return RedirectToAction("MyPost");
+            }
+            catch (Exception ex)
+            {
+                return View(post);
+            }
+        }
+
+        //Get: PostController/Delete/postId
+        public IActionResult Delete(int id)
+        {
+            int userProfileId = GetCurrentUserProfileId();
+            Post post = _postRepository.GetUserPostById(id, userProfileId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+            return View(post);
+        }
+
+        // POST: PostController/Delete/postId
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id, Post post)
+        {
+            try
+            {
+                _postRepository.DeletePost(id);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View(post);
+            }
+        }
+
         private int GetCurrentUserProfileId()
         {
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
