@@ -154,8 +154,13 @@ namespace TabloidMVC.Controllers
             List<Comment> comments = _commentRepository.GetCommentsByPostId(id);
             Post post = _postRepository.GetPostById(id);
 
+            PostCommentsViewModel vm = new PostCommentsViewModel()
+            {
+                Comments = comments,
+                Post = post
+            };
 
-            return View(comments);
+            return View(vm);
         }
 
         private int GetCurrentUserProfileId()

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TabloidMVC.Models;
@@ -18,9 +19,10 @@ namespace TabloidMVC.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT Id, PostId, UserProfileId, [Subject], Content, CreateDateTime 
-                                        FROM Comment
-                                                LEFT JOIN UserProfile u on UserProfileId = u.Id
+                    cmd.CommandText = @"SELECT c.Id, c.PostId, c.UserProfileId, c.[Subject], c.Content, c.CreateDateTime, u.Id AS UserProfileId, u.FirstName AS UserFirstName, p.Id AS PostId, p.Title AS PostTitle
+                                        FROM Comment c
+                                                LEFT JOIN UserProfile u on c.UserProfileId = u.Id
+                                                LEFT JOIN Post p on c.PostId = p.Id
                                         WHERE PostId = @postId
                                         ORDER BY CreateDateTime DESC";
 
@@ -39,7 +41,17 @@ namespace TabloidMVC.Repositories
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                             Subject = reader.GetString(reader.GetOrdinal("Subject")),
                             Content = reader.GetString(reader.GetOrdinal("Content")),
-                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime"))
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            Post = new Post()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("PostId")),
+                                Title = reader.GetString(reader.GetOrdinal("PostTitle"))
+                            },
+                            UserProfile = new UserProfile()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
+                                FirstName = reader.GetString(reader.GetOrdinal("UserFirstName"))
+                            }
                         });
                     }
 
