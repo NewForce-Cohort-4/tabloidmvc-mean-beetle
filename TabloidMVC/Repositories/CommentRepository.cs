@@ -20,8 +20,9 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"SELECT Id, PostId, UserProfileId, [Subject], Content, CreateDateTime 
                                         FROM Comment
+                                                LEFT JOIN UserProfile u on UserProfileId = u.Id
                                         WHERE PostId = @postId
-                                        ORDER BY CreatDateTime DESC";
+                                        ORDER BY CreateDateTime DESC";
 
                     cmd.Parameters.AddWithValue("@postId", postId);
 
