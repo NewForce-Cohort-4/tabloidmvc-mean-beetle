@@ -16,12 +16,14 @@ namespace TabloidMVC.Controllers
     {
         private readonly IPostRepository _postRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ICommentRepository _commentRepository;
         private readonly ITagRepository _tagRepository;
-        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, ITagRepository tagRepository)
+        public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository, ITagRepository tagRepository, ICommentRepository commentRepository)
         {
             _postRepository = postRepository;
             _categoryRepository = categoryRepository;
             _tagRepository = tagRepository;
+            _commentRepository = commentRepository;
         }
 
         public IActionResult Index()
@@ -155,6 +157,20 @@ namespace TabloidMVC.Controllers
             {
                 return View(post);
             }
+        }
+
+        public ActionResult Comments(int id)
+        {
+            List<Comment> comments = _commentRepository.GetCommentsByPostId(id);
+            Post post = _postRepository.GetPostById(id);
+
+            PostCommentsViewModel vm = new PostCommentsViewModel()
+            {
+                Comments = comments,
+                Post = post
+            };
+
+            return View(vm);
         }
 
         private int GetCurrentUserProfileId()

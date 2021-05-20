@@ -1,0 +1,70 @@
+﻿@model TabloidMVC.Models.ViewModels.PostCommentsViewModel
+@using System.Globalization;
+
+@{
+    ViewData["Title"] = "Comments";
+}
+
+<h1>
+    @Html.DisplayFor(model => model.Post.Title)
+</h1>
+
+<h2>Comments</h2>
+
+<div>
+    <a asp-action="Details" asp-route-id="@Context.Request.RouteValues["id"]"><i class="fas fa-arrow-circle-left"></i></a>
+</div>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Subject
+            </th>
+            <th>
+                Comment
+            </th>
+            <th>
+                Date Published
+            </th>
+            <th>
+                Comment Author
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Comments)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+
+                    @item.CreateDateTime.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserProfile.FirstName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary mx-1" title="Edit">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-primary mx-1" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
