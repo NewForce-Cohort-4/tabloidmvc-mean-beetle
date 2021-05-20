@@ -113,6 +113,7 @@ namespace TabloidMVC.Controllers
                 return View(tag);
             }
         }
+        //Gets list of tags available to add to a post, creates view model consisting of tags and a list to store selected tags
         public ActionResult ViewTagsToAdd()
         {
             List<Tag> tags = _tagRepository.GetAllTags();
@@ -123,6 +124,8 @@ namespace TabloidMVC.Controllers
             };
             return View(pt);
         }
+
+        //Receives associated Post ID from route and a list of Tag IDs from multi select and passes them to tag repo to create instances of PostTags
         [HttpPost]
         public ActionResult ViewTagsToAdd(int id, List<int> tagIds)
         {

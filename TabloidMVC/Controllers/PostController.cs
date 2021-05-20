@@ -45,6 +45,7 @@ namespace TabloidMVC.Controllers
             return View(myposts);
         }
 
+        //Passes post detail view model to view consisting of Post and Tags 
         public IActionResult Details(int id)
         {
             var post = _postRepository.GetPublishedPostById(id);

@@ -31,6 +31,7 @@
                 <a asp-action="Delete" asp-route-id="@Model.Post.Id" class="btn btn-outline-primary mx-1" title="Delete">
                     <i class="fas fa-trash"></i>
                 </a>
+                @*Link to redirect user to list of tags to add to post via tag controller, passing the post ID as parameter*@
                 <a class="btn btn-outline-primary mx-1" asp-route-id="@Model.Post.Id" asp-area="" asp-controller="Tag" asp-action="ViewTagsToAdd">Manage Tags</a>
             </div>
         </section>
