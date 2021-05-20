@@ -255,6 +255,48 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        public Post GetPostById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT Id, Title, Content, ImageLocation, CreateDateTime, PublishDateTime, IsApproved, CategoryId, UserProfileId
+                        from Post where Id = @id;
+                    ";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        Post dog = new Post
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Content = reader.GetString(reader.GetOrdinal("Content")),
+                            ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("PublishDateTime")),
+                            IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
+                            CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId")),
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId"))
+                        };
+                        reader.Close();
+                        return dog;
+                    }
+                    else
+                    {
+                        reader.Close();
+                        return null;
+                    }
+                }
+            }
+        }
+
         private Post NewPostFromReader(SqlDataReader reader)
         {
             return new Post()
