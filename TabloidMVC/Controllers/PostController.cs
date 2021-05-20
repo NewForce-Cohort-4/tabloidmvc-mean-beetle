@@ -49,12 +49,14 @@ namespace TabloidMVC.Controllers
         public IActionResult Details(int id)
         {
             var post = _postRepository.GetPublishedPostById(id);
-            var tags = _tagRepository.GetTagsByPostId(id);
+            var addedTags = _tagRepository.GetTagsByPostId(id);
+           
+
             if (post == null)
             {
                 int userId = GetCurrentUserProfileId();
                 post = _postRepository.GetUserPostById(id, userId);
-                tags = _tagRepository.GetTagsByPostId(post.Id);
+                addedTags = _tagRepository.GetTagsByPostId(post.Id);
                 if (post == null)
                 {
                     return NotFound();
@@ -63,7 +65,7 @@ namespace TabloidMVC.Controllers
             PostDetailViewModel pd = new()
             {
                 Post = post,
-                Tags = tags
+                AddedTags = addedTags
             };
             return View(pd);
         }

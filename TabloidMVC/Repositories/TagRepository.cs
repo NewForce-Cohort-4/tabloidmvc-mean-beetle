@@ -194,5 +194,30 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+
+        public void DeletePostTag(int postId, List<int> tagIds)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM PostTag
+                            WHERE PostId = @postId AND TagId = @tagId
+                        ";
+
+                    foreach (int tagId in tagIds)
+                    {
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@postId", postId);
+                        cmd.Parameters.AddWithValue("@tagId", tagId);
+                        cmd.ExecuteNonQuery();
+                    }
+                    conn.Close();
+                }
+            }
+        }
     }
 }
