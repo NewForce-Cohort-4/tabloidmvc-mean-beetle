@@ -10,8 +10,16 @@
 <form asp-action="ViewTagsToAdd">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" class="form-control" />
-    <select class="custom-select" multiple="multiple" asp-for="TagIds">
+    <h3>Add Tags</h3>
+    <select class="custom-select" multiple="multiple" asp-for="AddTagIds">
         @foreach (Tag item in Model.Tags)
+        {
+            <option value="@(item.Id)">@Html.DisplayFor(modelItem => item.Name)</option>
+        };
+    </select>
+    <h3>Remove Tags</h3>
+    <select class="custom-select" multiple="multiple" asp-for="DeleteTagIds">
+        @foreach (Tag item in Model.AddedTags)
         {
             <option value="@(item.Id)">@Html.DisplayFor(modelItem => item.Name)</option>
         };

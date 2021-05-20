@@ -16,7 +16,7 @@
                 <p class="text-black-50">Published on @Html.DisplayFor(model => model.Post.PublishDateTime)</p>
                 <p class="text-secondary">Tags:</p>
                     
-                    @foreach (Tag tag in Model.Tags)
+                    @foreach (Tag tag in Model.AddedTags)
                     {
                         <p>
                         @Html.DisplayFor(model => tag.Name)

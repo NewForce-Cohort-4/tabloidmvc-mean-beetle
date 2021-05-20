@@ -114,32 +114,51 @@ namespace TabloidMVC.Controllers
             }
         }
         //Gets list of tags available to add to a post, creates view model consisting of tags and a list to store selected tags
-        public ActionResult ViewTagsToAdd()
+        public ActionResult ViewTagsToAdd(int id)
         {
             List<Tag> tags = _tagRepository.GetAllTags();
+            List<Tag> addedTags = _tagRepository.GetTagsByPostId(id);
             PostTag pt = new()
             {
                 Tags = tags,
-                TagIds = new List<int>()
+                AddedTags = addedTags,
+                AddTagIds = new List<int>(),
+                DeleteTagIds = new List<int>()
             };
             return View(pt);
         }
 
         //Receives associated Post ID from route and a list of Tag IDs from multi select and passes them to tag repo to create instances of PostTags
         [HttpPost]
-        public ActionResult ViewTagsToAdd(int id, List<int> tagIds)
+        public ActionResult ViewTagsToAdd(int id, List<int> addTagIds, List<int> deleteTagIds)
         {
-            try
+            if (addTagIds.Count != 0)
             {
-                
-                    _tagRepository.AddTagToPost(id, tagIds);
-                return RedirectToAction("Details","Post", new { id = id });
-            }
-            catch
-            {
-                return RedirectToAction("ViewTagsToAdd", new { id = id });
-            }
+                try
+                {
 
+                    _tagRepository.AddTagToPost(id, addTagIds);
+                    return RedirectToAction("Details", "Post", new { id = id });
+                }
+                catch
+                {
+                    return RedirectToAction("ViewTagsToAdd", new { id = id });
+                }
+            }
+            if (deleteTagIds.Count != 0)
+            {
+                try
+                {
+                    _tagRepository.DeletePostTag(id, deleteTagIds);
+                    return RedirectToAction("Details", "Post", new { id = id });
+                }
+                catch
+                {
+                    return RedirectToAction("ViewTagsToAdd", new { id = id });
+                }
+            }
+            return RedirectToAction("Details", "Post", new { id = id });
         }
     }
+    
 }
