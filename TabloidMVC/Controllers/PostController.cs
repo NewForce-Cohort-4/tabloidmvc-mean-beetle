@@ -52,7 +52,6 @@ namespace TabloidMVC.Controllers
         {
             var post = _postRepository.GetPublishedPostById(id);
             var addedTags = _tagRepository.GetTagsByPostId(id);
-           
 
             if (post == null)
             {
@@ -159,6 +158,7 @@ namespace TabloidMVC.Controllers
             }
         }
 
+        // GET
         public ActionResult Comments(int id)
         {
             List<Comment> comments = _commentRepository.GetCommentsByPostId(id);
@@ -171,6 +171,34 @@ namespace TabloidMVC.Controllers
             };
 
             return View(vm);
+        }
+
+        // GET
+        public IActionResult CreateComment()
+        {
+
+            return View();
+        }
+
+        // POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateComment(int id, Comment comment)
+        {
+            try
+            {
+                comment.UserProfileId = GetCurrentUserProfileId();
+                comment.PostId = id;
+
+
+                _commentRepository.AddComment(comment);
+
+                return RedirectToAction("Comments", new { id = comment.PostId });
+            }
+            catch (Exception ex)
+            {
+                return View(comment);
+            }
         }
 
         private int GetCurrentUserProfileId()
