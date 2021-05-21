@@ -61,76 +61,31 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public void DeleteComment(int id)
+        
+        public void AddComment(Comment comment)
         {
-            using (SqlConnection conn = Connection)
+            DateTime myDateTime = DateTime.Now;
+            string sqlFormattedDate = myDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
+
+            using (var conn = Connection)
             {
                 conn.Open();
-
-                using (SqlCommand cmd = conn.CreateCommand())
+                using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            DELETE FROM Comment
-                            WHERE Id = @id
-                        ";
+                        INSERT INTO Comment (
+                            PostId, UserProfileId, Subject, Content, CreateDateTime )
+                        OUTPUT INSERTED.ID
+                        VALUES ( @PostId, @UserProfileId, @Subject, @Content, @CreateDateTime)";
+                    cmd.Parameters.AddWithValue("@PostId", comment.PostId);
+                    cmd.Parameters.AddWithValue("@UserProfileId", comment.UserProfileId);
+                    cmd.Parameters.AddWithValue("@Subject", comment.Subject);
+                    cmd.Parameters.AddWithValue("@Content", comment.Content);
+                    cmd.Parameters.AddWithValue("@CreateDateTime", sqlFormattedDate);
 
-                    cmd.Parameters.AddWithValue("@id", id);
+                    int id = (int)cmd.ExecuteScalar();
 
-                    cmd.ExecuteNonQuery();
+                    comment.Id = id;
                 }
             }
         }
