@@ -15,7 +15,7 @@
     <a asp-action="Details" asp-route-id="@Context.Request.RouteValues["id"]"><i class="fas fa-arrow-circle-left"></i></a>
 </div>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="CreateComment" asp-route-id="@Context.Request.RouteValues["id"]">Create New</a>
 </p>
 <table class="table">
     <thead>
