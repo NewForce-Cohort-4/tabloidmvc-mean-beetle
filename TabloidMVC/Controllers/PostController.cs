@@ -201,6 +201,35 @@ namespace TabloidMVC.Controllers
             }
         }
 
+        //GET: PostController/Delete/postId
+        public IActionResult DeleteComment(int id)
+        {
+            int userProfileId = GetCurrentUserProfileId();
+            Post post = _postRepository.GetUserPostById(id, userProfileId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+            return View(post);
+        }
+
+        // POST: PostController/Delete/postId
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteComment(int id, Comment comment)
+        {
+            try
+            {
+                _commentRepository.DeleteComment(id);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View(comment);
+            }
+        }
+
         private int GetCurrentUserProfileId()
         {
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
