@@ -36,17 +36,29 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CreateDateTime)
         </dd>
-       
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserType.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserType.Name)
+        </dd>
 
     </dl>
-    @if (!string.IsNullOrWhiteSpace(Model.ImageLocation))
+    @if (string.IsNullOrWhiteSpace(Model.ImageLocation))
     {
         <section class="row justify-content-center">
             <div>
-                <img src="@Model.ImageLocation" />
+                <img src="https://i.stack.imgur.com/y9DpT.jpg" />
             </div>
         </section>
-    }
+    } else
+            {
+<section class="row justify-content-center">
+    <div>
+        <img src="@Model.ImageLocation" />
+    </div>
+</section>
+            }
 </div>
 <div>
     @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
