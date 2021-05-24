@@ -10,55 +10,45 @@
     <h4>UserProfile</h4>
     <hr />
     <dl class="row">
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FullName)
-        </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10 userHead">
+            @if (string.IsNullOrWhiteSpace(Model.ImageLocation))
+            {<img src="https://i.stack.imgur.com/y9DpT.jpg" class="img-thumbnail" height="180" width="160" />
+            }
+            else
+            {
+                <img src="@Model.ImageLocation" class="img-thumbnail" />
+            }
             @Html.DisplayFor(model => model.FullName)
         </dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DisplayName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DisplayName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CreateDateTime)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CreateDateTime)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.UserType.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.UserType.Name)
+            </dd>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DisplayName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DisplayName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreateDateTime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreateDateTime)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserType.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserType.Name)
-        </dd>
+        </dl>
 
-    </dl>
-    @if (string.IsNullOrWhiteSpace(Model.ImageLocation))
-    {
-        <section class="row justify-content-center">
-            <div>
-                <img src="https://i.stack.imgur.com/y9DpT.jpg" />
-            </div>
-        </section>
-    } else
-            {
-<section class="row justify-content-center">
-    <div>
-        <img src="@Model.ImageLocation" />
-    </div>
-</section>
-            }
 </div>
 <div>
     @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
