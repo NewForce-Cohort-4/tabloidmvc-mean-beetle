@@ -190,7 +190,6 @@ namespace TabloidMVC.Controllers
                 comment.UserProfileId = GetCurrentUserProfileId();
                 comment.PostId = id;
 
-
                 _commentRepository.AddComment(comment);
 
                 return RedirectToAction("Comments", new { id = comment.PostId });
@@ -205,12 +204,12 @@ namespace TabloidMVC.Controllers
         public IActionResult DeleteComment(int id)
         {
             int userProfileId = GetCurrentUserProfileId();
-            Post post = _postRepository.GetUserPostById(id, userProfileId);
-            if (post == null)
+            Comment comment = _commentRepository.GetCommentById(id);
+            if (comment == null)
             {
                 return NotFound();
             }
-            return View(post);
+            return View(comment);
         }
 
         // POST: PostController/Delete/postId
@@ -220,9 +219,11 @@ namespace TabloidMVC.Controllers
         {
             try
             {
-                _commentRepository.DeleteComment(id);
+                int postId = comment.PostId;
+                _commentRepository.DeleteComment(comment.Id);
 
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Comments", new { id = postId });
             }
             catch (Exception ex)
             {
