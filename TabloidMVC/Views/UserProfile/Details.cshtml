@@ -1,0 +1,56 @@
+﻿@model TabloidMVC.Models.UserProfile
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>UserProfile</h4>
+    <hr />
+    <dl class="row">
+        <dd class="col-sm-10 userHead">
+            @if (string.IsNullOrWhiteSpace(Model.ImageLocation))
+            {<img src="https://i.stack.imgur.com/y9DpT.jpg" class="img-thumbnail" height="180" width="160" />
+            }
+            else
+            {
+                <img src="@Model.ImageLocation" class="img-thumbnail" />
+            }
+            @Html.DisplayFor(model => model.FullName)
+        </dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DisplayName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DisplayName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CreateDateTime)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CreateDateTime)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.UserType.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.UserType.Name)
+            </dd>
+
+        </dl>
+
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>
