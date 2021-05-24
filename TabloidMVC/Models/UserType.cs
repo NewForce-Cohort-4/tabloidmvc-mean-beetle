@@ -5,7 +5,7 @@ namespace TabloidMVC.Models
     public class UserType
     {
         public int Id { get; set; }
-        [DisplayName("User Type")]
+        [DisplayName("User Profile Type")]
         public string Name { get; set; }
     }
 }
